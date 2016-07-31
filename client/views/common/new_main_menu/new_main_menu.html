@@ -1,0 +1,35 @@
+<template name="newMainMenu">
+<div class="dropdown">
+  <button class="dropbtn" data-toggle="modal" data-target="#modal-createGroup">Create Group</button>
+  </div>
+
+{{> registrationGroup}}
+
+  <div class="dropdown" id="my_groups">
+  	<button class="dropbtn">My Groups</button>
+  	<div class="dropdown-content">
+  		{{#each myGrou}}
+  		  <a href="#" class='groups-select'>{{this.name}}</a>
+  		{{/each}}
+  	</div>
+  </div>
+
+  <div class="dropdown">
+  <button class="dropbtn">I Groups</button>
+  <div class="dropdown-content">
+    {{#each iGrou}}
+      <a href="#" class='groups-select'>{{this.name}}</a>
+    {{/each}}
+  </div>
+  </div>
+
+   <div class="dropdown">
+  <button class="dropbtn">here</button>
+  <div class="dropdown-content">
+    <a href="#">Link 1</a>
+    <a href="#">Link 2</a>
+    <a href="#">Link 3</a>
+  </div>
+  </div>
+
+</template>

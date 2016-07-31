@@ -1,0 +1,39 @@
+<template name="selectGrouop">
+
+	<div class="conteiner-top">
+	{{#with nameGroup}}
+			<h1>Group "{{name}}"</h1>
+		{{/with}}
+			{{#if autent}}
+		<a href="#" data-toggle="modal" data-target="#modal-control-group">Control Group</a>
+				{{> controlGroup}}
+			{{/if}}
+		</div>
+	<table class="price-menu">
+		<tr>
+			<th>Name</th>
+			<th>Price</th>
+			<th>Order</th>
+		</tr>
+		{{#each menuItem}}
+		<tr>
+			<td class="name-item">{{name}}</td>
+			<td>{{price}}</td>
+			<td class="edit-count-items">
+				<span class="count-item">{{count}}</span>
+				<span class="rem-item">-</span>
+				<span class="add-item">+</span>
+			</td>
+		</tr>
+		{{/each}}
+		<tr>
+			<td class="new-item-menu-name"><input type="text"></td>
+			<td class="new-item-menu-price"><input type="text"></td>
+			<td><input type="button" value="Add item in menu"></td>
+		</tr>
+	</table>
+	<div class="container-submit">
+		<input type="button" value="submit" class="btn submit-order">
+	</div>
+
+</template>
