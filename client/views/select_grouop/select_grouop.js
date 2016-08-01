@@ -54,5 +54,26 @@ console.log(a1);
 
 		valItem.name = e.currentTarget.nextElementSibling.innerText;
 		Meteor.call('_removeItemMenu', GName, userId, valItem);
+	},
+	'click .button-add-item-in-menu': function(e, tmp) {
+		var group = nameG.get();
+		var userId = Meteor.userId();
+		var data = {};
+		var name = $('.new-item-menu-name > input');
+		var price = $('.new-item-menu-price > input');
+		// check is length > 0
+
+		if(name.val().length > 0 && price.val().length > 0 && parseFloat(price.val())) {
+			var d = _.isNumber(price.val());
+			console.log(d);
+			data.name = name.val();
+			data.price = price.val();
+
+			name.val('');
+			price.val('');
+
+			Meteor.call('_insertItemMenu', group, userId, data);
+		}
+
 	}
 });
