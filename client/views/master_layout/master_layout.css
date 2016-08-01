@@ -1,4 +1,14 @@
 .container {
 	height: 500px;
+	width: 777px;
+	border: 1px solid red;
+}
+
+header,
+footer {
+	margin: 0 auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 777px;
 	border: 1px solid red;
 }

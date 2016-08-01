@@ -1,13 +1,17 @@
 <template name="MasterLayout">
-	<header>
-			{{> yield region="header"}}
-	</header>
 
-	<div class="container">
-		{{> yield}}
-	</div>
+		<header>
+				{{> yield region="header"}}
+		</header>
 
-	<footer>
-	{{> yield region="footer"}}
-	</footer>
+		<div class="container">
+			{{> yield}}
+		</div>
+
+		<div class="footer">
+			<footer>
+			{{> yield region="footer"}}
+			</footer>
+		</div>
+
 </template>

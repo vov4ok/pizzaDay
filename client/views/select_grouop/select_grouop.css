@@ -1,27 +1,48 @@
-table.price-menu > tr:nth-child(2n) {
-	background: #eee;
+div.conteiner-top > a {
+	float: right;
+}
+div.conteiner-top > h1 {
+	margin-top: 20px;
+	float: left;
 }
 
-table.price-menu > tr:nth-child(2n+1) {
-	background: #aaa;
-}
-
-table.price-menu > tr:nth-child(1) {
-	background: #000;
-	color: #fff;
-}
-table.price-menu {
+.price-menu {
 	width: 100%;
-}
-
-table.price-menu > tr > td,
-table.price-menu > tr > th {
 	text-align: center;
 }
 
-table.price-menu > tr > td {
-	width: 30%;
-	height: 20px;
+.name-item,
+.price-item,
+.edit-count-items
+.name-item-th,
+.price-item-th,
+.edit-count-items-th {
+	text-align: center;
+	overflow: auto;
+}
+
+.name-item,
+.name-item-th {
+	min-width: 100px;
+	text-align: center;
+}
+
+.remove-item-menu,
+.remove-item-menu-th {
+	width: 15px;
+}
+
+.price-menu > tr:nth-child(2n) {
+	background: #eee;
+}
+
+.price-menu > tr:nth-child(2n+1) {
+	background: #aaa;
+}
+
+.price-menu > tr:nth-child(1) {
+	background: #000;
+	color: #fff;
 }
 
 td.edit-count-items > span {
@@ -40,11 +61,13 @@ td.edit-count-items > span {
 	text-align: center;
 }
 
-div.conteiner-top > a {
-
-	float: right;
+.new-item-menu-name input {
+	width: 100%;
 }
-div.conteiner-top > h1 {
-	margin-top: 20px;
-	float: left;
+.new-item-menu-price input {
+	width: 50%;
+}
+
+.remove-item-menu-real {
+	cursor: pointer;
 }
