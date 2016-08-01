@@ -48,10 +48,11 @@ console.log(a1);
 		Meteor.call('_editCount', nameG.get(), userId , obj);
 	},
 	'click .remove-item-menu-real': function(e, tmp) {
+		var GName = nameG.get();
+		var userId = Meteor.userId();
 		var valItem = {};
-		valItem.name = e.currentTarget.nextElementSibling.innerText;
-			console.log(valItem);
 
-		Meteor.call('_removeItemMenu', valItem);
+		valItem.name = e.currentTarget.nextElementSibling.innerText;
+		Meteor.call('_removeItemMenu', GName, userId, valItem);
 	}
 });
