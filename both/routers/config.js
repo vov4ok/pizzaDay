@@ -8,3 +8,10 @@ Router.configure({
 		return Meteor.subscribe('groups');
 	}
 })
+
+Router.onBeforeAction(function() {
+	if(Meteor.users.findOne() === undefined) {
+		this.redirect('HomePage');
+	}
+	this.next();
+});

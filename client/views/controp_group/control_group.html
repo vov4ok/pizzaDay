@@ -1,29 +1,36 @@
 <template name="controlGroup">
 
-  <!-- Modal -->
-<div class="modal fade" id="modal-control-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Control Group</h4>
-      </div>
-      <div class="modal-body">
-      <!-- content modal -->
+	<!-- Modal -->
+	<div class="modal fade" id="modal-control-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
 
-       <button>Add Users</button>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<div>Delete Group</div>
+					<h4 class="modal-title" id="myModalLabel">Control Group</h4>
+				</div>
+				<div class="modal-body">
+				<!-- content modal -->
+					<div class="control-group-content">
+						<div class="class-add-users-group">
+							{{> addUsersToTheGroup}}
+						</div>
 
 
 
 
-      <!-- end content modal -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" name="button-create-group">Create</button>
-        <button type="button" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
+
+
+					</div>
+				<!-- end content modal -->
+				</div>
+				<div class="modal-footer">
+					<button type="button" name="button-create-group">Create</button>
+					<button type="button" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </template>

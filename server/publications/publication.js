@@ -1,16 +1,4 @@
-// Meteor.publish('groups', function() {
-// 	var self = this;
-// 	var subsk = Groups.find().observe({
-// 		adedd: function(doc) {
-// 				self.adedd('', doc.id, doc);
-// 		}
-// 		changed: function(doc) {
-// 				self.changed('', doc.id, doc);
-// 		}
-// 	})
-// })
 Meteor.publish('groups', function() {
-
 	return Groups.find({[this.userId]: {$in: [true, false]}});
 })
 

@@ -39,12 +39,12 @@ Template.selectGrouop.events({
 		var a = $('.name-item');
 		var a1 = $('.count-item');
 		var obj = {};
-console.log(a1);
+
 		for (var i = a.length - 1; i >= 0; i--) {
 			if(a1[i].innerText == 0) {continue};
 			obj[a[i].innerText] = a1[i].innerText;
 		}
-		console.log(obj);
+
 		Meteor.call('_editCount', nameG.get(), userId , obj);
 	},
 	'click .remove-item-menu-real': function(e, tmp) {
