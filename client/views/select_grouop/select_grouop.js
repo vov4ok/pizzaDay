@@ -74,6 +74,5 @@ Template.selectGrouop.events({
 
 			Meteor.call('_insertItemMenu', group, userId, data);
 		}
-
 	}
 });

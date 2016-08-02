@@ -1,5 +1,5 @@
 .box {
-	width: 100%;
+	width: 45%;
 	left: 10px;
 	top: 10px;
 	font-family: Georgia, Helvetica, sans-serif;
@@ -33,4 +33,8 @@
 
 .add-userss > li > label > input {
 	margin-right: 5px;
+}
+
+.rem-userss > li > span {
+	margin-right: 7px;
 }

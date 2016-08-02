@@ -3,10 +3,9 @@ Template.registrationGroup.events({
 	'click button[name=button-create-group]': function(e, tmpl) {
 		var data = {};
 		data.name = document.getElementsByName('name-group')[0].value;
-		while(data.name[data.name.length-1] === ' ') {
-			data.name = data.name.slice(0,-1);
 
-		}
+			data.name = data.name.trim();
+
 		if(data.name !== '') {
 		Meteor.call('_insertGroup', Meteor.userId(), data, function(err, res) {
 			var elem = $('#name-group-create');

@@ -1,20 +1,24 @@
 <template name="addUsersToTheGroup">
 
 			<div class="box">
-				<!-- <ul>               check all hire
-					<li>item1</li>
-					<li>item2</li>
-					<li>item3</li>
-				</ul> -->
-				<h3>add users<span>∨</span></h3>
+				<h3 class="add-use">add users<span>∨</span></h3>
 				<ul hidden class="add-userss">
-					{{#each listUser}}
+					{{#each listUsersAdd}}
 						<li><label><input type="checkbox">{{email}}</label></li>
 					{{/each}}
 					<div class="btns">
 						<button name="add-u">add</button>
 						<button>cancel</button>
 					</div>
+				</ul>
+			</div>
+
+			<div class="box">
+				<h3 class="rem-use">remove users<span>∨</span></h3>
+				<ul hidden class="rem-userss">
+					{{#each listUsersRem}}
+						<li><span>✖</span><label>{{email}}</label></li>
+					{{/each}}
 				</ul>
 			</div>
 
