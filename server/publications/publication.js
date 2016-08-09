@@ -1,5 +1,5 @@
 Meteor.publish('groups', function() {
-	return Groups.find({[this.userId]: {$in: [true, false]}});
+	return Groups.find({$or: [{isAdmin: this.userId}, {usersId: this.userId}]});
 })
 
 Groups.deny({

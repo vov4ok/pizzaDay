@@ -1,24 +1,28 @@
 <template name="addUsersToTheGroup">
 
 			<div class="box">
-				<h3 class="add-use">add users<span>∨</span></h3>
-				<ul hidden class="add-userss">
-					{{#each listUsersAdd}}
-						<li><label><input type="checkbox">{{email}}</label></li>
+				<input type="radio" name="add-rem-users-group" id="tab-add">
+				<label for="tab-add" class="label-add">Add users</label>
+				<ul class="add-users">
+					{{#each usersEmail}}
+					<li><label><input type="checkbox">{{email}}</label></li>
 					{{/each}}
-					<div class="btns">
-						<button name="add-u">add</button>
-						<button>cancel</button>
+					<div>
+						<button class="btn btn-success btn-sm glyphicon glyphicon-plus"></button>
+						<button class="btn btn-default btn-sm glyphicon glyphicon-remove"></button>
 					</div>
 				</ul>
-			</div>
 
-			<div class="box">
-				<h3 class="rem-use">remove users<span>∨</span></h3>
-				<ul hidden class="rem-userss">
-					{{#each listUsersRem}}
-						<li><span>✖</span><label>{{email}}</label></li>
+				<input type="radio" name="add-rem-users-group" id="tab-rem">
+				<label for="tab-rem" class="label-rem">Remuve users</label>
+				<ul class="remove-users">
+					{{#each usersEmail}}
+					<li><label><input type="checkbox">{{email}}</label></li>
 					{{/each}}
+					<div>
+						<button class="btn btn-danger btn-sm glyphicon glyphicon-minus"></button>
+						<button class="btn btn-default btn-sm glyphicon glyphicon-remove"></button>
+					</div>
 				</ul>
 			</div>
 

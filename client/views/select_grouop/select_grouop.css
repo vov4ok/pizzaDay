@@ -1,9 +1,14 @@
 div.conteiner-top > a {
 	float: right;
 }
+
 div.conteiner-top > h1 {
 	margin-top: 20px;
 	float: left;
+}
+
+.aa {
+	border: 1px solid red;
 }
 
 .price-menu {
@@ -29,7 +34,12 @@ div.conteiner-top > h1 {
 
 .remove-item-menu,
 .remove-item-menu-th {
-	width: 15px;
+	width: 30px;
+	text-align: center;
+}
+.remove-item-menu *,
+.remove-item-menu-th * {
+	margin: auto 2px auto 4px;
 }
 
 .price-menu > tr:nth-child(2n) {
@@ -68,6 +78,7 @@ td.edit-count-items > span {
 	width: 50%;
 }
 
-.remove-item-menu-real {
+.remove-item-menu-real,
+.update-item-menu-real {
 	cursor: pointer;
 }

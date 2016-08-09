@@ -1,87 +1,78 @@
 Meteor.methods({
-	'_getEmailUsers': function(userId, group) {
-		var arrUsers = Meteor.users.find().fetch();
-		var groupR = Groups.find({name: group}).fetch()[0];
-		var arrPropGroup = [];
-		var arrReruen = [];
+	'_getUsersData': function(nameGrou, bool) {
+		var group = Groups.find({name: nameGrou}).fetch()[0];
+		var idUsersInGroup = group.usersId;
+		var arrUsers = Meteor.users.find({}).fetch();
+		var arrReturn = [];
+		var _getMap = {};
 
-		for(var op in groupR) {
-			arrPropGroup.push(op);
-		}
-
+		// get map Id - email
 		arrUsers.forEach(function(e) {
-			if(!_.contains(arrPropGroup, e._id)) {
-				if(e.emails === undefined) {
-					arrReruen.push({'email': e.services.google.email});
-				} else {
-					arrReruen.push({'email': e.emails[0].address});
-				}
+			if(e.emails !== undefined){
+				_getMap[e._id] = e.emails[0].address;
+			} else {
+				_getMap[e._id] = e.services.google.email;
 			}
 		});
+		delete _getMap[group.isAdmin];
+		// get map Id - email
 
-		return arrReruen;
-	},
-	'_addUsersInGroup': function(userId, group, arr) {
-		var obj = {};
-		var arrUserss = Meteor.users.find().fetch();
-		var arrId = [];
-
-		arrUserss.forEach(function(e) {
-			if(e.emails === undefined) {
-					if(_.indexOf(arr, e.services.google.email) !== -1) {
-						arrId.push(e._id);
-					}
-				} else {
-					if(_.indexOf(arr, e.emails[0].address) !== -1) {
-						arrId.push(e._id);
-					}
-				}
-		});
-		arrId.forEach(function(e) {
-			Groups.update({name: group}, {$set: {[e]: false}})
-		});
-
-	},
-	'_getUsersInGroup': function(userId, group) {
-		var arrUsers = [];
-		var groupR = Groups.find({name: group}).fetch()[0];
-		var constArr = ['name', 'menu', '_id'];
-		var arrPropGroup = [];
-		var arrReruen = [];
-		var arrIdUsers = [];
-
-		console.log(group);
-		for(var op in groupR) {
-			arrPropGroup.push(op);
+		if(bool) {
+			// in group
+			_.values(_.omit(_getMap, idUsersInGroup)).forEach(function(e) {
+				arrReturn.push({'email': e});
+			});
+			console.log(arrReturn);
+		} else {
+			// out group
+			_.values(_.pick(_getMap, idUsersInGroup)).forEach(function(e) {
+				arrReturn.push({'email': e});
+			});
+			console.log(arrReturn);
 		}
-
-		arrIdUsers = _.difference(arrPropGroup, constArr)
-		arrUsers = Meteor.users.find({_id: {$in: arrIdUsers}}).fetch();
-
-		arrUsers.forEach(function(e) {
-				if(e.emails === undefined) {
-					arrReruen.push({'email': e.services.google.email});
-				} else {
-					arrReruen.push({'email': e.emails[0].address});
-				}
-		});
-
-		return arrReruen;
+		return arrReturn;
 	},
-	'_remUsersInGroup': function(userId, group, email) {
-		var thisId;
-		var obj = {};
-		Meteor.users.find({}).fetch().forEach(function(e) {
-			if(e.emails === undefined) {
-					if(e.services.google.email === email) {thisId = e._id};
-				} else {
-					if(e.emails[0].address === email) {thisId = e._id};
-				}
+	'_addRemoveUsersInGroup': function(userId, nameGrou, arr, bool) {
+		var group = Groups.find({name: nameGrou}).fetch()[0];
+		var arrUsers = Meteor.users.find({}).fetch();
+		var _getMap = {};
+		var ress = [];
+
+		// get map Id - email
+		arrUsers.forEach(function(e) {
+			if(e.emails !== undefined){
+				_getMap[e._id] = e.emails[0].address;
+			} else {
+				_getMap[e._id] = e.services.google.email;
+			}
 		});
+		// get map Id - email
 
-		obj = Groups.find({name: group}).fetch()[0];
-		delete obj[thisId];
-		Groups.update({name: group}, obj);
+		if(bool) {
+			// add users in group
+			ress = _.values(_.pick(_.invert(_getMap), arr));
+			Groups.update({name: nameGrou}, {$pushAll: {usersId: ress}});
+		} else {
+			// remove users in group
+			ress = _.values(_.pick(_.invert(_getMap), arr));
+			Groups.update({name: nameGrou}, {$pullAll: {usersId: ress}});
+		}
+	},
+	'_deleteGroup': function(userId, nameGroup) {
+		var _allow = Groups.find({isAdmin: userId, name: nameGroup}).count();
 
+		if(_allow) {
+			Groups.remove({isAdmin: userId, name: nameGroup});
+		}
+	},
+	'_removeItemMenu': function(group, userId, data) {
+		var arr = Groups.find({name: group}).fetch()[0];
+
+		delete arr.menu[data.name];
+		Groups.update({name: group}, {$set: {menu: arr.menu}});
+		console.log(arr);
+	},
+	'_qwe': function() {
+		console.log(Groups.update({name: "qwe"}, {$pushAll: {arr: [1,5,7]}}));
 	}
 });

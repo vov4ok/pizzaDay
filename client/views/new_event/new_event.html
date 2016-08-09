@@ -1,0 +1,40 @@
+<template name="newEvent">
+	<!-- Modal -->
+<div class="modal fade" id="modal-create-event" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">New Event</h4>
+			</div>
+				<div class="modal-body">
+
+					<div class="row">
+						<div class="col-md-3">
+							<label>Name Event </label>
+						</div>
+						<div class="col-md-9">
+							<input type="text" name="name-event" id="name-enevt-create"><span></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-3">
+							<label>Date Event </label>
+						</div>
+						<div class="col-md-9">
+							<input type="date" name="date-event" id="date-enevt-create"><span></span>
+						</div>
+					</div>
+
+
+
+
+				</div>
+			<div class="modal-footer">
+				<button type="button" name="button-create-event">Create</button>
+				<button type="button" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+</template>

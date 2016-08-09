@@ -1,50 +1,75 @@
-var listUsersAdd = new ReactiveVar();
-var listUsersRem = new ReactiveVar();
-var nameG = new ReactiveVar();
+var _usersInGroup = new ReactiveVar();
 
 Template.addUsersToTheGroup.helpers({
-	'listUsersAdd': function() {
-			nameG.set(this.nameGroup);
-		return listUsersAdd.get();
-	},
-	'listUsersRem': function() {
-			nameG.set(this.nameGroup);
-		return listUsersRem.get();
+	'usersEmail': function() {
+		var arr = _usersInGroup.get();
+		return _usersInGroup.get();
 	}
 });
 
 Template.addUsersToTheGroup.events({
-	'click .add-use': function () {
-		$('.add-use').next().slideToggle();
-			var text = $(".add-use > span").text();
-			$(".add-use > span").text(text != "∨" ? "∨" : "∧");
-		Meteor.call('_getEmailUsers', Meteor.userId(), nameG.get(), function (err, res) {
-			listUsersAdd.set(res);
+	'click .label-add': function() {
+		var nameGroup = this.nameGroup;
+
+		$('.add-users').find('input:checkbox').prop('checked', false);
+		Meteor.call('_getUsersData', nameGroup, true, function (err, res) {
+			_usersInGroup.set(res);
+
 		});
 	},
-	'click .btns > button[name=add-u]': function(e, tmp) {
+	'click .label-rem': function() {
+		var nameGroup = this.nameGroup;
+
+		$('.remove-users').find('input:checkbox').prop('checked', false);
+		Meteor.call('_getUsersData', nameGroup, false, function (err, res) {
+			_usersInGroup.set(res);
+		});
+	},
+	'click .add-users > div > button:first()': function(e, tmp) {					// button +
+		var nameGroup = this.nameGroup;
 		var arr = [];
 
-		$('.add-userss').find('li').children('label').each(function(i, e) {
-			if($(e).children('input').first().prop("checked")) {
-				$(e).parent().remove();
-				arr.push($(e).text());
+		$('.add-users').find('li').each(function(index, el) {
+			var ee = $(el);
+
+			if(ee.find('input').prop('checked')) {
+				arr.push(ee.text());
+				ee.find('input').removeAttr('checked');
+				ee.remove();
 			}
 		});
-		Meteor.call('_addUsersInGroup', Meteor.userId(), nameG.get(), arr);
+
+		Meteor.call('_addRemoveUsersInGroup', Meteor.userId(), nameGroup, arr, true);
+
 	},
-	'click .rem-use': function () {
-		$('.rem-use').next().slideToggle();
-			var text = $(".rem-use > span").text();
-			$(".rem-use > span").text(text != "∨" ? "∨" : "∧");
-		Meteor.call('_getUsersInGroup', Meteor.userId(), nameG.get(), function (err, res) {
-			listUsersRem.set(res);
+	'click .add-users > div > button:last()': function(e, tmp) {
+		$('.add-users').find('li').each(function(index, el) {
+			if($(el).find('input').prop('checked') === true) {
+				$(el).find('input').prop('checked', false);
+			}
 		});
 	},
-	'click .rem-userss > li > span': function(e, tmp) {
-		var it = e.currentTarget.nextElementSibling.innerText;
+	'click .remove-users > div > button:first()': function(e, tmp) {					// button -
+		var nameGroup = this.nameGroup;
+		var arr = [];
 
-		Meteor.call('_remUsersInGroup', Meteor.userId(), nameG.get(), it);
-		console.log(e.currentTarget.parentElement.remove());
+		$('.remove-users').find('li').each(function(index, el) {
+			var ee = $(el);
+
+			if(ee.find('input').prop('checked')) {
+				arr.push(ee.text());
+				ee.find('input').prop('checked', false);
+				ee.remove();
+			}
+		});
+		console.log(arr);
+		Meteor.call('_addRemoveUsersInGroup', Meteor.userId(), nameGroup, arr, false);
+	},
+	'click .remove-users > div > button:last()': function(e, tmp) {
+		$('.remove-users').find('li').each(function(index, el) {
+			if($(el).find('input').prop('checked') === true) {
+				$(el).find('input').prop('checked', false);
+			}
+		});
 	}
 });

@@ -1,40 +1,51 @@
 .box {
-	width: 45%;
-	left: 10px;
-	top: 10px;
-	font-family: Georgia, Helvetica, sans-serif;
+	width: 40%;
 }
 
-.box h3 {
+.box > input[type='radio'] {
+	display: none;
+}
+
+.box > label {
+	background-color: #333;
+	color: #fff;
+	display: inline-block;
+	font-weight: bold;
 	padding: 5px;
-	border: 1px solid #d1d1d1;
-	font-size: 14px;
-	margin:0;
-	cursor: pointer;
-}
-
-.box h3 span {
-	float: right;
-	cursor: pointer;
-}
-
-.box ul {
-	border: 1px solid #333;
-	background: #aaa;
-	padding: 5px;
-	overflow: hidden;
-	margin:0;
-	text-align: left;
-}
-
-.btns {
+	margin: 0;
 	text-align: center;
+	width: 100%;
+	border-bottom: 1px solid #fff;
 }
 
-.add-userss > li > label > input {
-	margin-right: 5px;
+.box > ul {
+	display: none;
+	list-style: none;
+	border-left: 1px solid #333;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	margin: 0;
+	padding: 0;
 }
 
-.rem-userss > li > span {
-	margin-right: 7px;
+.box > ul > li {
+	padding: 3px;
+}
+
+.box > ul > li > label > input {
+	margin-right: 3px;
+}
+
+.box > ul > div {
+	text-align: center;
+	margin: 5px auto;
+}
+
+.box > ul > div > button {
+	font-weight: bold;
+}
+
+#tab-add:checked ~ ul:nth-of-type(1),
+#tab-rem:checked ~ ul:nth-of-type(2) {
+	display: block;
 }

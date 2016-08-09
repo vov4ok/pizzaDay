@@ -1,4 +1,4 @@
-var nameG = new ReactiveVar();
+var itemMenu = new ReactiveDict();
 
 Template.selectGrouop.helpers({
 	menuItem: function() {
@@ -13,14 +13,14 @@ Template.selectGrouop.helpers({
 				count: (elem[op].counter[uId])?(elem[op].counter[uId]):(0)
 			})
 		}
-		return arr;
+
+		return _.sortBy(arr, 'name');
 	},
 	nameGroup: function() {
-		nameG.set(this.nameGroup);
 		return {name: this.nameGroup};
 	},
 	autent: function() {
-		return Groups.find({name: this.nameGroup}, {fields: {[Meteor.userId()]: 1}}).fetch()[0][Meteor.userId()];
+		return Groups.find({name: this.nameGroup, isAdmin: Meteor.userId()}).fetch();
 	}
 });
 
@@ -35,7 +35,8 @@ Template.selectGrouop.events({
 	},
 	'click .submit-order': function(e, tmp) {
 		var userId = Meteor.userId();
-		var GName = nameG.get();
+		var GName = this.nameGroup;
+		console.log('this.n', this.nameGroup);
 		var a = $('.name-item');
 		var a1 = $('.count-item');
 		var obj = {};
@@ -45,27 +46,50 @@ Template.selectGrouop.events({
 			obj[a[i].innerText] = a1[i].innerText;
 		}
 
-		Meteor.call('_editCount', nameG.get(), userId , obj);
+		Meteor.call('_editCount', GName, userId , obj);
 	},
 	'click .remove-item-menu-real': function(e, tmp) {
-		var GName = nameG.get();
+		var GName = tmp.data.nameGroup;
 		var userId = Meteor.userId();
 		var valItem = {};
-
-		valItem.name = e.currentTarget.nextElementSibling.innerText;
+		console.log(tmp	);
+		valItem.name = e.currentTarget.parentElement.nextElementSibling.innerText;
+		console.log(GName);
 		Meteor.call('_removeItemMenu', GName, userId, valItem);
 	},
+	'click .update-item-menu-real': function(e, tmp) {
+
+		// якись переключатель щоб можна було заблокувати подію на кнопці редагувати!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+		itemMenu.set('name', $(e.target).parent().next().text());
+		itemMenu.set('price', $(e.target).parent().next().next().text());
+		itemMenu.set('order', $(e.target).parent().next().next().next().html());
+
+		console.log('name ====================== ', itemMenu.get('name'));
+		console.log('price ======================', itemMenu.get('price'));
+		console.log('order ======================', itemMenu.get('order'));
+
+
+	},
+	'click .end-update-ok': function(e, tmp) {
+		console.log('All ok');
+	},
+	'click .end-update-cancel': function(e, tmp) {
+		console.log('All canceled');
+	},
 	'click .button-add-item-in-menu': function(e, tmp) {
-		var group = nameG.get();
+		var group = this.nameGroup;
 		var userId = Meteor.userId();
 		var data = {};
 		var name = $('.new-item-menu-name > input');
 		var price = $('.new-item-menu-price > input');
-		// check is length > 0
+
+		name.val(name.val().trim());
+		price.val(price.val().trim());
 
 		if(name.val().length > 0 && price.val().length > 0 && parseFloat(price.val())) {
 			var d = _.isNumber(price.val());
-			console.log(d);
+
 			data.name = name.val();
 			data.price = price.val();
 
