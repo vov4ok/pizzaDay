@@ -1,0 +1,44 @@
+<template name="checkOrder">
+	{{#if _ifOrders}}
+	<div class="row check-order-row">
+		<div class="col-md-6 my-h-row-35 text-center text-uppercase">
+			name
+		</div>
+		<div class="col-md-3 my-h-row-35 text-center text-uppercase">
+			count
+		</div>
+		<div class="col-md-3 my-h-row-35 text-center text-uppercase">
+			price
+		</div>
+	</div>
+	{{#each _orders}}
+	<div class="row check-order-row">
+		<div class="col-md-6 my-h-row-20 text-left text-capitalize">
+			{{name}}
+		</div>
+		<div class="col-md-3 my-h-row-20 text-center">
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5" name="priceItem">{{count}}</div>
+				<div class="col-md-5 text-left"><span class="badge">{{sale}}</span></div>
+			</div>
+		</div>
+		<div class="col-md-3 my-h-row-20 text-center">
+			{{price}}
+		</div>
+	</div>
+	{{/each}} {{#with _check}}
+	<div class="row text-right ">
+		<div class="col-md-6 col-md-offset-6 bg-primary my-h-row-35 check-order-row">
+			<div class="row">
+				<div class="col-md-4 text-center text-capitalize">units: {{units}}</div>
+				<div class="col-md-4 text-center text-capitalize">total: {{total}}$</div>
+				<div class="col-md-4 text-center text-capitalize">to pay: {{to_pay}}$</div>
+			</div>
+		</div>
+	</div>
+	{{/with}} {{else}}
+	<div class="row h1 text-center text-capitalize">
+		this order is empty
+	</div>
+	{{/if}}
+</template>

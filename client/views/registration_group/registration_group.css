@@ -1,3 +1,9 @@
 .modal {
 	text-align: left;
 }
+
+._this {
+	box-shadow: -1px 0px 3px rgba(150,150,150,.8);
+	background-color: rgba(51, 122, 183, .8);
+	border: 1px solid rgba(255,255,255,.8);
+}

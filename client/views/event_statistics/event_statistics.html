@@ -1,0 +1,40 @@
+<template name="eventStatistics">
+	<div class="row">
+		{{#if _AdminGroup}}
+		{{#if _eventIsCreate}}
+		<div class="col-md-6">
+			{{#with _statisticEvent}}
+			<div class="row">
+				<div class="row h4">
+					statistics
+				</div>
+				<div class="row text-capitalize">
+					<div class="col-md-3">signed</div>
+					<div class="col-md-3">ignored</div>
+					<div class="col-md-3">ordered</div>
+					<div class="col-md-3">all</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">{{signed}}</div>
+					<div class="col-md-3">{{ignored}}</div>
+					<div class="col-md-3">{{ordered}}</div>
+					<div class="col-md-3">{{all}}</div>
+				</div>
+			</div>
+			{{/with}}
+		</div>
+		<div class="col-md-6">
+			<div class="row">
+				<div class="row h4 text-center text-capitalize">
+					change of status
+				</div>
+				<div class="row text-center">
+					<div class="btn btn-primary" name="status-group-lower">prev</div>
+					<div class="btn btn-primary" name="status-group-raise">next</div>
+				</div>
+			</div>
+		</div>
+		{{/if}}
+		{{/if}}
+	</div>
+</template>

@@ -1,52 +1,7 @@
-/* Style The Dropdown Button */
-.dropbtn {
-    background: linear-gradient(to top, rgba(50,50,150,1), rgba(50,50,150,.5));
-    color: white;
-    padding: 10px 7px;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-}
-
-/* The container <div> - needed to position the dropdown content */
-.dropdown {
-    position: relative;
-    display: inline-block;
-    text-align: left;
-}
-
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 100px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    text-align: left;
-    z-index: 100;
-}
-
-/* Links inside the dropdown */
-.dropdown-content a {
-    color: black;
-    padding: 6px 8px;
-    text-decoration: none;
-    display: block;
-}
-
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover {
-    background-color: #777;
-    color: white;
-}
-
-/* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {
-    background: linear-gradient(to top, rgba(50,50,150,.5), rgba(50,50,150,1));
+.new-main-menu {
+	/*	border-top-left-radius    : 28px 50%;
+	border-top-right-radius   : 28px 50%;
+	border-bottom-left-radius : 28px 50%;
+	border-bottom-right-radius: 28px 50%;*/
 }
 

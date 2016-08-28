@@ -1,0 +1,31 @@
+<template name="eventsInGroup">
+	{{#if event}}
+		{{#with event}}
+			<div class="row events-in-group">
+				<div class="col-md-12">
+					<div class="col-md-6 bg-info">
+						<div class="btn-sm">{{status}}</div>
+					</div>
+					<div class="col-md-6">
+						<div class="col-md-12 text-capitalize">
+							{{{nav}}}
+						</div>
+					</div>
+				</div>
+			</div>
+		{{/with}}
+	{{else}}
+		{{#if viewEvent}}
+			<div class="row">
+				<div class="col-md-12 text-capitalize">
+					<button type="button" class="btn btn-primary btn-sm" name="subscribe">
+						subscribe event
+					</button>
+					<button type="button" class="btn btn-danger btn-sm" name="ignore">
+						ignore event
+					</button>
+				</div>
+			</div>
+		{{/if}}
+	{{/if}}
+</template>

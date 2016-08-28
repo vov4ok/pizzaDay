@@ -1,0 +1,42 @@
+.menu-group-template-complete-orders {
+	margin-top: 4px;
+}
+
+.js-menu-group-row,
+.menu-group-row,
+.menu-group-template-complete-orders > div[name=completeOrders] {
+	border-top-left-radius: 17px 50%;
+	border-top-right-radius: 17px 50%;
+	border-bottom-left-radius: 17px 50%;
+	border-bottom-right-radius: 17px 50%;
+
+}
+.menu-group-template-complete-orders > div[name=completeOrders] {
+	width: 25%;
+}
+.menu-group-row:nth-of-type(n) {
+	margin-top: 1px;
+	background: #aaa;
+}
+
+.menu-group-row:nth-of-type(1) {
+	background: #337ab7;
+	margin-top: 7px;
+}
+
+.my-btn-circle {
+	border-radius: 50% 50%;
+}
+
+.my-fix-height {
+	height: 50px;
+	line-height: 50px;
+}
+
+.js-hidden {
+	display: none;
+}
+.js-menu-group-row {
+	margin-top: 1px;
+}
+

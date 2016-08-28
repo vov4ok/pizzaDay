@@ -1,27 +1,41 @@
 <template name="controlGroup">
-
 	<!-- Modal -->
 	<div class="modal fade" id="modal-control-group" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
 
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<div class="delete-this-group">Delete Group</div>
-					<h4 class="modal-title" id="myModalLabel">Control Group</h4>
-				</div>
 				<div class="modal-body">
-				<!-- content modal -->
-					<div class="control-group-content">
-						<div class="class-add-users-group">
-							{{> addUsersToTheGroup}}
+					<!-- content modal -->
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<div>
+						<!-- Nav tabs -->
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active"><a href="#users" aria-controls="users" role="tab" data-toggle="tab">Users</a></li>
+							<li role="presentation"><a href="#sale" aria-controls="sale" role="tab" data-toggle="tab">Sale</a></li>
+							<li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+							<li role="presentation"><a href="#delete" aria-controls="delete" role="tab" data-toggle="tab">Delete</a></li>
+						</ul>
+						<!-- Tab panes -->
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="users">
+								{{> addUsersToTheGroup}}
+							</div>
+							<div role="tabpanel" class="tab-pane" id="sale">
+								{{> saleForItemMenu}}
+							</div>
+							<div role="tabpanel" class="tab-pane" id="messages">
+								messages
+							</div>
+							<div role="tabpanel" class="tab-pane" id="delete">
+								<div class="btn btn-default delete-this-group" >
+									<a href="{{urlFor route='HomePage'}}" class="text-primary">delete</a>
+								</div>
+							</div>
 						</div>
-
 					</div>
-				<!-- end content modal -->
+					<!-- end content modal -->
 				</div>
 			</div>
 		</div>
 	</div>
-
 </template>

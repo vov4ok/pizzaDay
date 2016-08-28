@@ -1,0 +1,21 @@
+.check-order-row {
+	border-top-left-radius    : 17px 50%;
+	border-top-right-radius   : 17px 50%;
+	border-bottom-left-radius : 17px 50%;
+	border-bottom-right-radius: 17px 50%;
+}
+
+.check-order-row:nth-of-type(2n) {
+	background: #ccc;
+}
+.check-order-row:nth-of-type(2n+1) {
+	background: #aaa;
+}
+
+.check-order-row:nth-of-type(1) {
+	margin-top: 7px;
+	background: #5cb85c;
+}
+.check-order-row:nth-last-of-type(1) {
+	background: #337ab7;
+}

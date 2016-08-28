@@ -1,111 +1,54 @@
 <template name="selectGrouop">
 
 	<div class="row">
-		<div class="col-md-12">
-			<div class="col-md-9 text-center text-uppercase aa">
-				{{#with nameGroup}}
-				<h1>Group "{{name}}"</h1>
-				{{/with}}
-			</div>
-			<div class="col-md-3 text-center aa">
-				<img src="/fon.png" alt="fon.png" width="150" height="200" class="img-rounded">
-				{{#if autent}}
-				<div class="col-md-12 text-center aa">
-					<a href="#" data-toggle="modal" data-target="#modal-create-event">Create event</a>
-					{{> newEvent}}
+
+			<div class="col-md-9 text-center text-uppercase">
+				<div class="row">
+					{{#with nameGroup}}
+						<h1>Group "{{name}}"</h1>
+					{{/with}}
 				</div>
-				<div class="col-md-12 text-center aa">
+				<div class="row">
+					{{> eventsInGroup}}
+				</div>
+				<div class="row">
+					{{> eventStatistics}}
+				</div>
+			</div>
+
+			<div class="col-md-3 text-center underImage">
+				{{#with imageGroup}}
+				<img src="{{this}}" alt="1.png" width="150" height="200" class="img-rounded">
+				{{/with}}
+				{{#if autent}}
+				{{#if allowCreateEvent}}
+				<div class="row text-center">
+					<a href="#" id="create-new-event">Create event</a>
+				</div>
+				{{/if}}
+				<div class="row text-center">
 					<a href="#" data-toggle="modal" data-target="#modal-control-group">Control Group</a>
 					{{> controlGroup}}
 				</div>
 				{{/if}}
 			</div>
+
+
+	</div>
+
+	{{#if allowMenu}}
+	<div class="row">
+		<div class="col-md-12">
+				{{> menuGroup}}
 		</div>
 	</div>
+	{{/if}}
 
+	{{#if allowOrder}}
 	<div class="row">
-			<div class="col-md-12">
-				<table class="price-menu">
-					<tr>
-						<th class="remove-item-menu-th"></th>
-						<th class="name-item-th">Name</th>
-						<th class="price-item-th">Price</th>
-						<th class="edit-count-items-th">Order</th>
-					</tr>
-					{{#each menuItem}}
-					<tr>
-						<td class="remove-item-menu "><span class="remove-item-menu-real">✖</span>
-																					<!-- <span class="update-item-menu-real">✎</span> -->
-						</td>
-						<td class="name-item">{{name}}</td>
-						<td class="price-item">{{price}}</td>
-						<td class="edit-count-items">
-							<span class="count-item">{{count}}</span>
-							<span class="rem-item">-</span>
-							<span class="add-item">+</span>
-						</td>
-					</tr>
-					{{/each}}
-					<tr>
-						<td class="remove-item-menu"></td>
-						<td class="new-item-menu-name"><input type="text" ></td>
-						<td class="new-item-menu-price"><input type="text" ></td>
-						<td><input type="button" value="Add item in menu" class="button-add-item-in-menu"></td>
-					</tr>
-				</table>
-				<div class="container-submit">
-					<input type="button" value="submit" class="btn submit-order">
-				</div>
-			</div>
+		<div class="col-md-12">
+				{{> checkOrder}}
+		</div>
 	</div>
-
+	{{/if}}
 </template>
-
-
-<!-- <template name="selectGrouop">
-
-		<div class="conteiner-top">
-		{{#with nameGroup}}
-				<h1>Group "{{name}}"</h1>
-			{{/with}}
-
-			<img src="/fon.png" alt="fon.png" width="150" height="200" class="img-rounded">
-
-				{{#if autent}}
-			<a href="#" data-toggle="modal" data-target="#modal-control-group">Control Group</a>
-					{{> controlGroup}}
-				{{/if}}
-			</div>
-	<table class="price-menu">
-		<tr>
-			<th class="remove-item-menu-th"></th>
-			<th class="name-item-th">Name</th>
-			<th class="price-item-th">Price</th>
-			<th class="edit-count-items-th">Order</th>
-		</tr>
-		{{#each menuItem}}
-		<tr>
-			<td class="remove-item-menu "><span class="remove-item-menu-real">✖</span><span class="update-item-menu-real" data-toggle="modal" data-target=".bs-example-modal-sm">✎</span></td>
-			<td class="name-item">{{name}}</td>
-			<td class="price-item">{{price}}</td>
-			<td class="edit-count-items">
-				<span class="count-item">{{count}}</span>
-				<span class="rem-item">-</span>
-				<span class="add-item">+</span>
-			</td>
-		</tr>
-		{{/each}}
-		<tr>
-			<td class="remove-item-menu"></td>
-			<td class="new-item-menu-name"><input type="text" ></td>
-			<td class="new-item-menu-price"><input type="text" ></td>
-			<td><input type="button" value="Add item in menu" class="button-add-item-in-menu"></td>
-		</tr>
-	</table>
-	<div class="container-submit">
-		<input type="button" value="submit" class="btn submit-order">
-	</div>
-
-{{> editItemMenu}}
-</template>
- -->

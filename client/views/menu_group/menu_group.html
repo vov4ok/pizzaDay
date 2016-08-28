@@ -1,0 +1,72 @@
+<template name="menuGroup">
+	{{#if itemMenu}}
+	<div class="row text-capitalize text-center menu-group-row">
+		<div class="col-md-1 my-h-row-20">
+			#\#
+		</div>
+		<div class="col-md-5 my-h-row-20 text-uppercase">
+			name
+		</div>
+		<div class="col-md-3 my-h-row-20 text-uppercase">
+			price
+		</div>
+		<div class="col-md-3 my-h-row-20 text-uppercase">
+			order
+		</div>
+	</div>
+	{{#each itemMenu}}
+	<div class="row data-collect-this-group menu-group-row">
+		<div class="col-md-1 my-h-row-45 text-center">
+			<div class="row text-center my-h-row-45">
+				<div class="col-md-6 glyphicon glyphicon-trash my-h-row-45" id="idRemoveItemMenu"></div>
+				<div class="col-md-6 glyphicon glyphicon-pencil my-h-row-45" id="idUpdateItemMenu"></div>
+			</div>
+		</div>
+		<div class="col-md-5 text-left my-h-row-45" name="nameItemMenu">
+			{{name}}
+		</div>
+		<div class="col-md-3 text-center my-h-row-45">
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5" name="priceItem">{{price}}</div>
+				<div class="col-md-5 text-left"><span class="badge">{{sale}}</span></div>
+			</div>
+		</div>
+		<div class="col-md-3 text-center my-h-row-45">
+			<div class="row text-center">
+				<div class="col-md-4">
+					<div class="countt" name="countItemMenu">{{count}}</div>
+				</div>
+				<div class="col-md-4 glyphicon glyphicon-plus my-h-row-45 order-menu-plus-count">
+				</div>
+				<div class="col-md-4 glyphicon glyphicon-minus my-h-row-45 order-menu-minus-count">
+				</div>
+			</div>
+		</div>
+	</div>
+	{{/each}}
+	<div class="row text-center menu-group-row">
+		<div class="col-md-1 text-center my-h-row-35">
+			<div class="glyphicon glyphicon-arrow-right my-h-row-35"></div>
+		</div>
+		<div class="col-md-5 text-center my-h-row-35">
+			<input type="text" placeholder="Name" class="my-h-row-35 text-center btn-group btn-group-justified">
+		</div>
+		<div class="col-md-3 text-center my-h-row-35">
+			<input type="text" placeholder="Price" class="my-h-row-35 text-center btn-group btn-group-justified">
+		</div>
+		<div class="col-md-3 text-center my-h-row-35">
+			<div class="row text-center my-h-row-35">
+				<div class="glyphicon glyphicon-floppy-disk my-h-row-35 insert-itemMenu-in-coll"></div>
+			</div>
+		</div>
+	</div>
+	<div class="row text-right menu-group-template-complete-orders">
+		<div class="text-capitalize btn btn-primary text-center" name="completeOrders">complete orders</div>
+	</div>
+	{{else}}
+	<div class="row h1 text-center text-capitalize">
+		this menu is empty
+	</div>
+	{{/if}}
+
+</template>

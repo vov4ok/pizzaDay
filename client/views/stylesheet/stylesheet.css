@@ -1,0 +1,64 @@
+* {
+	font-family: "PT Sans", Arial;
+}
+
+body {
+    background: url('http://subtlepatterns.com/patterns/grid_noise.png');
+}
+
+.glyphicon {
+	cursor: pointer;
+}
+
+.aaa {
+	border: 1px solid red;
+}
+
+.my-v-cent-middl {
+	display: flex;
+	align-items: center;
+}
+
+/* my color*/
+.my-primary {
+	background: #337ab7;
+}
+.my-success {
+	background: #5cb85c;
+}
+.my-info {
+	background: #5bc0de;
+}
+/* end my color*/
+
+.my-hover-class:hover {
+	color    : #000;
+	font-size: 1.2em;
+}
+
+.my-h-row-45 {
+	height     : 45px;
+	line-height: 45px;
+}
+.my-h-row-35 {
+	height     : 35px;
+	line-height: 35px;
+}
+.my-h-row-20 {
+	height     : 20px;
+	line-height: 20px;
+}
+.my-h-row-60 {
+	height     : 60px;
+	line-height: 60px;
+}
+.my-h-row-10 {
+	height     : 20px;
+	line-height: 20px;
+	padding-left: 5px;
+}
+
+
+.my-c-black {
+	color: black;
+}

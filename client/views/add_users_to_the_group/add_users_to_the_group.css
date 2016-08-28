@@ -1,5 +1,5 @@
 .box {
-	width: 40%;
+	width: 100%;
 }
 
 .box > input[type='radio'] {

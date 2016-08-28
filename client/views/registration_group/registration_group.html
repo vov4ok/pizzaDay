@@ -1,25 +1,38 @@
 <template name="registrationGroup">
-
-<!-- Modal -->
-<div class="modal fade" id="modal-createGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel">New Group</h4>
-			</div>
-				<div class="modal-body">
-
-				<label>Name Group <input type="text" name="name-group" id="name-group-create"><span></span></label>
-
-
+	<!-- Modal -->
+	<div class="modal fade" id="modal-createGroup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">New Group</h4>
 				</div>
-			<div class="modal-footer">
-				<button type="button" name="button-create-group">Create</button>
-				<button type="button" data-dismiss="modal">Cancel</button>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group ">
+							<label class="control-label col-sm-3" for="name-group-create">Name Group</label>
+							<div class="col-sm-9  has-feedback">
+								<input type="text" class="form-control" name="name-group" id="name-group-create" aria-describedby="inputNewGroup">
+								<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+								<span id="inputNewGroup" class="sr-only"></span>
+							</div>
+						</div>
+						<div class="form-group ">
+							<label class="control-label col-sm-3" for="inputSuccess3">Icon Group</label>
+							<div class="col-sm-9 has-feedback selectImage">
+								<img src="/3.jpg" alt="1.jpg" width="60" height="80" class="img-thumbnail _this has-feedback">
+								<img src="/2.jpg" alt="1.jpg" width="60" height="80">
+								<img src="/1.png" alt="1.jpg" width="60" height="80">
+							</div>
+						</div>
+					</form>
+					<!-- 2 -->
+				</div>
+				<div class="modal-footer">
+					<div class="btn btn-primary" name="button-create-group" data-dismiss="modal">Create</div>
+					<div class="btn btn-default" data-dismiss="modal">Cancel</div>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
 </template>
