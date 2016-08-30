@@ -1,53 +1,49 @@
 <template name="selectGrouop">
-
 	<div class="row">
-
-			<div class="col-md-9 text-center text-uppercase">
-				<div class="row">
-					{{#with nameGroup}}
-						<h1>Group "{{name}}"</h1>
-					{{/with}}
-				</div>
-				<div class="row">
-					{{> eventsInGroup}}
-				</div>
-				<div class="row">
-					{{> eventStatistics}}
-				</div>
+		<div class="col-md-9 text-center text-uppercase">
+			<div class="row">
+				{{#with nameGroup}}
+				<h1>Group "{{name}}"</h1> {{/with}}
 			</div>
-
-			<div class="col-md-3 text-center underImage">
-				{{#with imageGroup}}
-				<img src="{{this}}" alt="1.png" width="150" height="200" class="img-rounded">
-				{{/with}}
-				{{#if autent}}
-				{{#if allowCreateEvent}}
-				<div class="row text-center">
-					<a href="#" id="create-new-event">Create event</a>
-				</div>
-				{{/if}}
-				<div class="row text-center">
-					<a href="#" data-toggle="modal" data-target="#modal-control-group">Control Group</a>
-					{{> controlGroup}}
-				</div>
-				{{/if}}
+			<div class="row">
+				{{> eventsInGroup}}
 			</div>
-
-
+			<div class="row">
+				{{> eventStatistics}}
+			</div>
+		</div>
+		<div class="col-md-3 text-center underImage">
+			{{#with imageGroup}}
+			<img src="{{this}}" alt="{{this}}" width="150" height="200" class="img-rounded">
+			{{/with}}
+			{{#if autent}}
+			{{#if allowCreateEvent}}
+			<div class="row text-center">
+				<a href="#" id="create-new-event">Create event</a>
+			</div>
+			{{else}} {{#if allowEndEvent}}
+			<div class="row text-center">
+				<a href="#" id="end-event">End event</a>
+			</div>
+			{{/if}}
+			{{/if}}
+			<div class="row text-center">
+				<a href="#" data-toggle="modal" data-target="#modal-control-group">Control Group</a>
+				{{> controlGroup}}
+			</div>
+			{{/if}}
+		</div>
 	</div>
-
 	{{#if allowMenu}}
 	<div class="row">
 		<div class="col-md-12">
-				{{> menuGroup}}
+			{{> menuGroup}}
 		</div>
 	</div>
-	{{/if}}
-
-	{{#if allowOrder}}
+	{{/if}} {{#if allowOrder}}
 	<div class="row">
 		<div class="col-md-12">
-				{{> checkOrder}}
+			{{> checkOrder}}
 		</div>
 	</div>
 	{{/if}}

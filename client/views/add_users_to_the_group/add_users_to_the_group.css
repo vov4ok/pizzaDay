@@ -1,4 +1,14 @@
-.box {
+.add-users-to-the-group input[type=checkbox] {
+	cursor: pointer;
+}
+
+.add-users-to-the-group input[type=text] {
+	cursor: auto;
+}
+
+
+
+/*.box {
 	width: 100%;
 }
 
@@ -48,4 +58,4 @@
 #tab-add:checked ~ ul:nth-of-type(1),
 #tab-rem:checked ~ ul:nth-of-type(2) {
 	display: block;
-}
+}*/

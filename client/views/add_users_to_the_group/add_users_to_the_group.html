@@ -1,5 +1,76 @@
 <template name="addUsersToTheGroup">
+	<!-- new -->
+		<div class="row">
+		<div class="col-md-6 my-h-row-35 text-center h4">
+			<strong>Add users</strong>
+		</div>
+		<div class="col-md-6 my-h-row-35 text-center h4">
+			<strong>Remove users</strong>
+		</div>
+	</div>
+	<div class="row add-users-to-the-group">
+		<div class="col-md-6">
+			{{#each usersEmailIsGroup}}
+			<div class="input-group">
+				<span class="input-group-addon">
+        <input type="checkbox" aria-label="...">
+      </span>
+				<input type="text" class="form-control data-for-add" value="{{email}}" disabled>
+			</div>
+			<!-- /input-group -->
+			{{/each}}
+		</div>
+		<!-- /.col-lg-6 -->
+		<div class="col-md-6">
+			{{#each usersEmailNotGroup}}
+			<div class="input-group">
+				<span class="input-group-addon">
+        <input type="checkbox" aria-label="...">
+      </span>
+				<input type="text" class="form-control data-for-rem" value="{{email}}" disabled>
+			</div>
+			<!-- /input-group -->
+			{{/each}}
+		</div>
+		<!-- /.col-lg-6 -->
+	</div>
+	<div class="row">
+		<div class="col-md-6 text-center">
+			<div class="btn btn-primary button-add">add</div>
+		</div>
+		<div class="col-md-6 text-center">
+			<div class="btn btn-primary button-rem">remove</div>
+		</div>
+	</div>
+	<!-- /.row -->
+	<!-- end new -->
+	<!-- <div class="box">
+				<input type="radio" name="add-rem-users-group" id="tab-add">
+				<label for="tab-add" class="label-add">Add users</label>
+				<ul class="add-users">
+					{{#each usersEmail}}
+					<li><label><input type="checkbox">{{email}}</label></li>
+					{{/each}}
+					<div>
+						<button class="btn btn-success btn-sm glyphicon glyphicon-plus"></button>
+						<button class="btn btn-default btn-sm glyphicon glyphicon-remove"></button>
+					</div>
+				</ul>
 
+				<input type="radio" name="add-rem-users-group" id="tab-rem">
+				<label for="tab-rem" class="label-rem">Remuve users</label>
+				<ul class="remove-users">
+					{{#each usersEmail}}
+					<li><label><input type="checkbox">{{email}}</label></li>
+					{{/each}}
+					<div>
+						<button class="btn btn-danger btn-sm glyphicon glyphicon-minus"></button>
+						<button class="btn btn-default btn-sm glyphicon glyphicon-remove"></button>
+					</div>
+				</ul>
+			</div> -->
+</template>
+<!--
 			<div class="box">
 				<input type="radio" name="add-rem-users-group" id="tab-add">
 				<label for="tab-add" class="label-add">Add users</label>
@@ -26,4 +97,4 @@
 				</ul>
 			</div>
 
-</template>
+ -->

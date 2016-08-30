@@ -2,16 +2,16 @@
 	{{#if event}}
 		{{#with event}}
 			<div class="row events-in-group">
-				<div class="col-md-12">
-					<div class="col-md-6 bg-info">
+					<div class="col-md-4">
+						{{date}}
+					</div>
+					<div class="col-md-4 bg-info">
 						<div class="btn-sm">{{status}}</div>
 					</div>
-					<div class="col-md-6">
-						<div class="col-md-12 text-capitalize">
+					<div class="col-md-4">
 							{{{nav}}}
-						</div>
 					</div>
-				</div>
+
 			</div>
 		{{/with}}
 	{{else}}

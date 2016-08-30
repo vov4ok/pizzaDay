@@ -6,7 +6,7 @@ Template.menuGroup.helpers({
 
 		if (objMenu.menu !== undefined) {
 			for (var op in objMenu.menu) {
-				let m = objMenu.menu[op];
+				var m = objMenu.menu[op];
 				arrForReturn.push({
 					'name': op,
 					'price': objMenu.menu[op].price + '$',
@@ -16,6 +16,10 @@ Template.menuGroup.helpers({
 			}
 			return _.sortBy(arrForReturn, 'name');
 		}
+	},
+	_checkIsAdmin: function() {
+		var _name = Template.parentData(1).nameGroup;
+		return Groups.findOne({name: _name, isAdmin: Meteor.userId()});
 	}
 });
 

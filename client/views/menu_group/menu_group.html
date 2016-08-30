@@ -18,7 +18,9 @@
 	<div class="row data-collect-this-group menu-group-row">
 		<div class="col-md-1 my-h-row-45 text-center">
 			<div class="row text-center my-h-row-45">
+				{{#if _checkIsAdmin}}
 				<div class="col-md-6 glyphicon glyphicon-trash my-h-row-45" id="idRemoveItemMenu"></div>
+				{{/if}}
 				<div class="col-md-6 glyphicon glyphicon-pencil my-h-row-45" id="idUpdateItemMenu"></div>
 			</div>
 		</div>

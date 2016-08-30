@@ -30,14 +30,18 @@ Template.selectGrouop.helpers({
 	},
 	allowCreateEvent: function() {
 		var _obj = Groups.findOne({ name: this.nameGroup }).event;
-		if (_obj && (_obj.status === 0 || _obj.status === 1 || _obj.status === 2)) {
-			return false;
-		} else {
+		if (!_obj) {
+			return true;
+		}
+	},
+	allowEndEvent: function() {
+		var _obj = Groups.findOne({ name: this.nameGroup }).event;
+		if (_obj && _obj.status === 3) {
 			return true;
 		}
 	},
 	imageGroup: function() {
-		return (Groups.findOne({name: this.nameGroup}).icon)?(Groups.findOne({name: this.nameGroup}).icon):('/1.png')
+		return Groups.findOne({name: this.nameGroup}).icon || '/logo/1.jpg'
 	}
 });
 
@@ -60,5 +64,8 @@ Template.selectGrouop.events({
 		Meteor.call('_newEvent', Meteor.userId(), tmp.data.nameGroup);
 		Meteor.call('_newNotificatio', Meteor.userId(), tmp.data.nameGroup);
 		console.log('Event added');
+	},
+	'click #end-event': function(e, tmp) {
+		Meteor.call('_endEvent', Meteor.userId(), tmp.data.nameGroup);
 	}
 });

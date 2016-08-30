@@ -2,16 +2,14 @@ Template.registrationGroup.events({
 	'click div[name=button-create-group]': function(e, tmpl) {
 		var data = {};
 		data.name = document.getElementsByName('name-group')[0].value;
-
+		var elem = $('#name-group-create');
 		data.name = data.name.trim();
 		data.icon = $('.selectImage').find('._this').attr('src');
-		console.log('data', data);
-		//var _allow = data.name.search(/^(([a-z-_0-9іьєї\']{1,7}\s?){1,4})$/ig);
+		var _allow = data.name.search(/^(([a-z-_0-9іьєї\']{1,7}\s?){1,4})$/ig);
 
 		if (data.name !== '') {
-			if (true) { // _allow !== -1
+			if (_allow !== -1) {
 				Meteor.call('_insertGroup', Meteor.userId(), data, function(err, res) {
-					var elem = $('#name-group-create');
 					if (res) {
 						console.log('ok');
 						elem.parent().removeClass('has-error has-success');
@@ -30,6 +28,10 @@ Template.registrationGroup.events({
 				elem.next().removeClass('glyphicon-ok').addClass('glyphicon-remove');
 				elem.next().next().html('(error)');
 			}
+		} else {
+			elem.parent().removeClass('has-success has-error');
+			elem.next().removeClass('glyphicon-ok glyphicon-remove');
+			elem.next().next().html('');
 		}
 		console.log('Group added');
 	},
@@ -37,12 +39,14 @@ Template.registrationGroup.events({
 		console.log(e.currentTarget.value);
 		var data = {};
 		var elem = $('#name-group-create');
-		//var _allow = data.name.search(/^(([a-z-_0-9іьєї\']{1,7}\s?){1,4})$/ig);
+		data.name = document.getElementsByName('name-group')[0].value.trim();
+		var _allow = data.name.search(/^(([a-z-_0-9іьєї\']{1,7}\s?){1,4})$/ig);
 
-		data.name = document.getElementsByName('name-group')[0].value;
-		if (data.name <= 0) {
-			if (true) { // _allow !== -1
+
+		if (data.name !== '') {
+			if (_allow !== -1) {
 				Meteor.call('_checkNameGroup', Meteor.userId(), data, function(err, res) {
+					console.log('res == ', res);
 					if (res) {
 						console.log('ok');
 						elem.parent().removeClass('has-error').addClass('has-success');
@@ -54,7 +58,6 @@ Template.registrationGroup.events({
 						elem.next().removeClass('glyphicon-ok').addClass('glyphicon-remove');
 						elem.next().next().html('(error)');
 					}
-
 				});
 			} else {
 				elem.parent().removeClass('has-success').addClass('has-error');
@@ -62,8 +65,8 @@ Template.registrationGroup.events({
 				elem.next().next().html('(error)');
 			}
 		} else {
-			elem.parent().removeClass('has-error has-success');
-			elem.next().removeClass('glyphicon-remove glyphicon-ok');
+			elem.parent().removeClass('has-success has-error');
+			elem.next().removeClass('glyphicon-ok glyphicon-remove');
 			elem.next().next().html('');
 		}
 	},

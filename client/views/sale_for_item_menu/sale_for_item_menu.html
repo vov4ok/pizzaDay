@@ -1,10 +1,21 @@
 <template name="saleForItemMenu">
 	<div class="row">
+		<div class="col-md-6 my-h-row-35 text-center h4">
+			<strong>Add Sale</strong>
+		</div>
+		<div class="col-md-6 my-h-row-35 text-center h4">
+			<strong>Remove Sale</strong>
+		</div>
+	</div>
+	<div class="row">
 		<div class="col-md-6">
-		<!-- add selection -->
+			<!-- add selection -->
 			<form class="form-horizontal sale-for-item-menu">
+
 				<div class="form-group">
-					<label class="col-sm-4 control-label">Name</label>
+					<div class="col-sm-4 text-right">
+						<p class="form-control-static">Name:</p>
+					</div>
 					<div class="col-sm-8">
 						<select class="form-control" name="nameGroupAdd">
 							{{#each _itemsNoSale}}
@@ -14,13 +25,17 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="IdCountSale" class="col-sm-4 control-label">Sale</label>
+					<div class="col-sm-4 text-right">
+						<p class="form-control-static">Sale:</p>
+					</div>
 					<div class="col-sm-8">
 						<input type="number" class="form-control" id="IdCountSale" name="countSaleAdd" placeholder="0">
 					</div>
 				</div>
 				<div class="form-group" name="typeSaleAdd">
-					<label class="col-sm-4 control-label">Type sale</label>
+					<div class="col-sm-4 text-right">
+						<p class="form-control-static">Type sale:</p>
+					</div>
 					<div class="col-sm-5">
 						<select class="form-control">
 							<option value="Coupon">Coupon</option>
@@ -37,16 +52,38 @@
 			</form>
 		</div>
 		<div class="col-md-6">
-		<!-- remove selection -->
+			<!-- remove selection -->
 			<form class="form-horizontal sale-for-item-menu">
 				<div class="form-group">
-					<label class="col-sm-4 control-label">Name</label>
+					<div class="col-sm-4 text-right">
+						<p class="form-control-static">Name:</p>
+					</div>
 					<div class="col-sm-8">
 						<select class="form-control" name="nameGroupRemove">
 							{{#each _itemsOfSale}}
 							<option value="{{this.name}}">{{this.name}}</option>
 							{{/each}}
 						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-4 text-right">
+						<p class="form-control-static">Sale:</p>
+					</div>
+					<div class="col-sm-8">
+					{{#with _sale}}
+						<p class="form-control-static">{{count}}</p>
+					{{/with}}
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-4 text-right">
+						<p class="form-control-static">Type sale:</p>
+					</div>
+					<div class="col-sm-8">
+						{{#with _sale}}
+						<p class="form-control-static">{{type}}</p>
+					{{/with}}
 					</div>
 				</div>
 				<div class="form-group">

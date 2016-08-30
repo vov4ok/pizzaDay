@@ -5,14 +5,18 @@
  * _newEvent,
  * _setEventStatus,
  * _subscribeToEvent,
- * _getSubscribeUser,
  * _removeAddItemMenu,
  * _completeOrdersInGroup
  * _changeOfStatus
  * _updateItemMenu
  * _newNotificatio
  * _addRemoveSale
+ * _endEvent
+ * sendEmail
  */
+Meteor.startup(function() {
+	process.env.MAIL_URL = 'smtp://login:password@smtp.mailgun.org:25'
+});
 
 Meteor.methods({
 	'_getUsersData': function(nameGrou, bool) {
@@ -38,13 +42,11 @@ Meteor.methods({
 			_.values(_.omit(_getMap, idUsersInGroup)).forEach(function(e) {
 				arrReturn.push({ 'email': e });
 			});
-			console.log(arrReturn);
 		} else {
 			// out group
 			_.values(_.pick(_getMap, idUsersInGroup)).forEach(function(e) {
 				arrReturn.push({ 'email': e });
 			});
-			console.log(arrReturn);
 		}
 		return arrReturn;
 		/*------------*/
@@ -108,7 +110,6 @@ Meteor.methods({
 			var a = Groups.find({ name: nameGroup }).fetch()[0].isAdmin;
 			var b = Groups.find({ name: nameGroup, event: { $exists: false } }).fetch();
 			if (userId == a && !_.isEmpty(b)) {
-				// console.log('b', _.isEmpty(b));
 				Groups.update({
 					name: nameGroup
 				}, {
@@ -153,12 +154,6 @@ Meteor.methods({
 				});
 			}
 		}
-		/*------------*/
-	},
-	'_getSubscribeUser': function(userId, nameGroup) {
-		console.log(userId);
-		console.log(nameGroup);
-		return false;
 		/*------------*/
 	},
 	'_removeAddItemMenu': function(userId, group, data, bool) {
@@ -295,10 +290,186 @@ Meteor.methods({
 				}
 			});
 		}
+	},
+	'_endEvent': function(userId, nameGroup) {
+		var _allow = Groups.findOne({ name: nameGroup, isAdmin: Meteor.userId() });
+
+		if (_allow) {
+			Groups.update({ name: nameGroup }, {
+				$unset: {
+					event: ""
+				}
+			});
+			for (var op in _allow.menu) {
+				Groups.update({ name: nameGroup }, {
+					$set: {
+						[`menu.${op}.counter`]: ""
+					}
+				});
+			}
+		}
+	},
+	sendEmail: function(userId, nameGroup) {
+		this.unblock();
+		var group = Groups.findOne({ name: nameGroup, isAdmin: Meteor.userId() });
+		var data = {};
+		var arrUsers = Meteor.users.find({}).fetch();
+		var _getMap = {};
+		var _arrAllUsersId = [];
+		var _objAllUsersId_count = {};
+			console.log('send Email');
+
+		if (false) { // group
+			arrUsers.forEach(function(e) {
+				if (e.emails !== undefined) {
+					_getMap[e._id] = {
+						'email': e.emails[0].address,
+						'name': e.profile['first-name']
+					};
+				} else {
+					_getMap[e._id] = {
+						'email': e.services.google.email,
+						'name': e.services.google['given_name']
+					}
+				}
+			});
+
+			for (var option in group.menu) {
+				_arrAllUsersId = _.union(_arrAllUsersId, _.keys(group.menu[option].counter));
+			}
+
+			_arrAllUsersId.forEach(function(e) {
+				_objAllUsersId_count[e] = 0;
+				for (var _op in group.menu) {
+					_objAllUsersId_count[e] += +group.menu[_op].counter[e];
+				}
+
+			})
+
+			console.log('_objAllUsersId_count', _objAllUsersId_count);
+
+			function _getOrder(menu, _userId) {
+				let _strReturn = ``;
+				for (var op in menu) {
+					if (menu[op].counter[_userId] !== undefined) {
+						_strReturn += `<tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: left; width: 31%; border-top-width: 1px; border-top-color: #eee; border-top-style: solid; margin: 0; padding: 5px 0;" align="left" valign="top">${op}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; border-top-width: 1px; border-top-color: #eee; border-top-style: solid; margin: 0; padding: 5px 0;" align="center" valign="top">${menu[op].counter[_userId]}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: right; width: 31%; border-top-width: 1px; border-top-color: #eee; border-top-style: solid; margin: 0; padding: 5px 0;" align="right" valign="top">${menu[op].price}$</td> </tr>`
+					}
+				}
+				return _strReturn;
+			}
+
+			function getToPay(menu, _userId) {
+				var objReturn = { units: 0, total: 0 };
+				var _sale = 0;
+				var _strReturn = ``;
+
+				//console.log('menu', menu);
+				//
+				for (var op in menu) {
+					if (menu[op].counter[_userId] !== undefined) {
+						objReturn.units += menu[op].counter[_userId]
+						objReturn.total += parseInt(menu[op].price) * menu[op].counter[_userId];
+
+						let _saleItem;
+						let _allCount = _.reduce(_.values(menu[op].counter), function(m, e) {
+							return m + e;
+						}, 0);
+						let _allPrice = _allCount * menu[op].price;
+
+						if (menu[op].sale != undefined) {
+							switch (menu[op].sale.type) {
+								case 'coupon':
+									_saleItem = menu[op].sale.count * menu[op].price;
+									break;
+								case '%':
+									_saleItem = _allPrice * (menu[op].sale.count) / 100;
+									break;
+								case '$':
+									_saleItem = _allCount * menu[op].sale.count;
+									break;
+								default:
+									_saleItem = -1
+							}
+						}
+						if (_saleItem > 0) {
+							_sale += _saleItem / _allCount * menu[op].counter[_userId];
+						}
+					}
+				}
+				//
+				objReturn.to_pay = ((objReturn.total - _sale) >= 0) ? (+(objReturn.total - _sale).toFixed(2)) : (0);
+
+
+				return objReturn;
+			};
+
+			// console.log('setEmailList', getToPay(group.menu, userId));
+			// console.log('_getOrder', _getOrder(group.menu, userId));
+
+
+			data.email = 'mwowa0105@gmail.com';
+
+
+			console.log('send Email');
+			_.difference(_arrAllUsersId, group.isAdmin).forEach(function(e) {
+				var _countTotalToPay = getToPay(group.menu, e)
+				Email.send({
+					to: 'mwowa0105@gmail.com', // _getMap[e].email,
+					from: 'PizzaDay@meteor.com',
+					subject: `Pizza ${group.event.dateAt.getDate()}-${group.event.dateAt.getMonth()+1}-${group.event.dateAt.getFullYear()}`,
+					html: `<!DOCTYPE html> <html style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta> <meta charset="UTF-8"> <title>Pizza Day</title> </head> <body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0; padding: 0;" bgcolor="#f6f6f6"> <table style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td> <td width="600" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; width: 100% !important; margin: 0 auto; padding: 0;" valign="top"> <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 0;"> <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; margin: 0; padding: 10px;" align="center" valign="top"> <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top"> <h2 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; box-sizing: border-box; font-size: 18px !important; color: #000; line-height: 1.2em; font-weight: 800 !important; margin: 20px 0 5px;">Thank you for your order </br> ${_getMap[e].name}</h2> </td> </tr> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; margin: 0; padding: 0 0 20px;" align="center" valign="top"> <table style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; text-align: left; width: 100% !important; margin: 40px auto;"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top">${group.event.dateAt.getDate()}-${group.event.dateAt.getMonth()+1}-${group.event.dateAt.getFullYear()}</td> </tr> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top"> <table cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; margin: 0;"> ${_getOrder(group.menu, e)} <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: left; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="left" valign="top">Total</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="center" valign="top">${_countTotalToPay.units}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: right; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="right" valign="top">${_countTotalToPay.total}$</td> </tr> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: left; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="left" valign="top">To Pay</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="center" valign="top">${_countTotalToPay.units}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: right; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="right" valign="top">${_countTotalToPay.to_pay}$</td> </tr> </table> </td> </tr> </table> </td> </tr> </table> </td> </tr> </table> </div> </td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td> </tr> </table> </body> </html>`
+				});
+
+			});
+			// for Admin
+
+			function _forAdminCheck() {
+				let _strForReturn = ``;
+				let _saleAll = 0;
+				let _total = 0;
+				let _countAll = 0;
+
+				for (var itMenu in group.menu) {
+					let _saleItem = 0;
+					let _count = _.reduce(_.values(group.menu[itMenu].counter), function(m, e) {
+						return m + e;
+					}, 0);
+					_countAll += _count;
+					_total += _count * group.menu[itMenu].price;
+
+					if (group.menu[itMenu].sale != undefined) {
+						switch (group.menu[itMenu].sale.type) {
+							case 'coupon':
+								_saleItem = group.menu[itMenu].sale.count * group.menu[itMenu].price;
+								break;
+							case '%':
+								_saleItem = _allPrice * (group.menu[itMenu].sale.count) / 100;
+								break;
+							case '$':
+								_saleItem = _allCount * group.menu[itMenu].sale.count;
+								break;
+							default:
+								_saleItem = -1
+						}
+					}
+					if (_saleItem > 0) {
+						_saleAll += _saleItem;
+					}
+					_strForReturn += `<tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: left; width: 31%; border-top-width: 1px; border-top-color: #eee; border-top-style: solid; margin: 0; padding: 5px 0;" align="left" valign="top">${itMenu}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; border-top-width: 1px; border-top-color: #eee; border-top-style: solid; margin: 0; padding: 5px 0;" align="center" valign="top">${_count}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: right; width: 31%; border-top-width: 1px; border-top-color: #eee; border-top-style: solid; margin: 0; padding: 5px 0;" align="right" valign="top">${group.menu[itMenu].price}$</td> </tr>`;
+				}
+				return _strForReturn += `<tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: left; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="left" valign="top">Total</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="center" valign="top">${_countAll}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: right; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="right" valign="top">${_total.toFixed(2)}$</td> </tr> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: left; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="left" valign="top">To Pay</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="center" valign="top">${_countAll}</td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: right; width: 31%; border-top-width: 2px; border-top-color: #333; border-top-style: solid; border-bottom-color: #333; border-bottom-width: 2px; border-bottom-style: solid; font-weight: 700; margin: 0; padding: 5px 0;" align="right" valign="top">${(_total - _saleAll).toFixed(2)}$</td> </tr>`;
+			}
+
+			Email.send({
+				to: 'mwowa0105@gmail.com', // _getMap[group.isAdmin].email
+				from: 'PizzaDay@meteor.com',
+				subject: `Pizza ${group.event.dateAt.getDate()}-${group.event.dateAt.getMonth()+1}-${group.event.dateAt.getFullYear()} Total`,
+				html: `<!DOCTYPE html> <html style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta> <meta charset="UTF-8"> <title>Pizza Day</title> </head> <body itemscope itemtype="http://schema.org/EmailMessage" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: none; width: 100% !important; height: 100%; line-height: 1.6em; background-color: #f6f6f6; margin: 0; padding: 0;" bgcolor="#f6f6f6"> <table style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td> <td width="600" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; width: 100% !important; margin: 0 auto; padding: 0;" valign="top"> <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 0;"> <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; margin: 0; padding: 10px;" align="center" valign="top"> <table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top"> <h2 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; box-sizing: border-box; font-size: 18px !important; color: #000; line-height: 1.2em; font-weight: 800 !important; margin: 20px 0 5px;">General check ${nameGroup}</h2> </td> </tr> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; text-align: center; width: 31%; margin: 0; padding: 0 0 20px;" align="center" valign="top"> <table style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; text-align: left; width: 100% !important; margin: 40px auto;"> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top">${group.event.dateAt.getDate()}-${group.event.dateAt.getMonth()+1}-${group.event.dateAt.getFullYear()}</td> </tr> <tr style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 5px 0;" valign="top"> <table cellpadding="0" cellspacing="0" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; margin: 0;">${_forAdminCheck()}</table> </td> </tr> </table> </td> </tr> </table> </td> </tr> </table> </div> </td> <td style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td> </tr> </table> </body> </html>`
+			});
+		}
 	}
 });
 
-
-/* sale
+/*
  * email
  */

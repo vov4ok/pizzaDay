@@ -1,14 +1,15 @@
 Template.eventsInGroup.helpers({
 	'event': function() {
+		var _objRet = {};
 		var obj = Groups.findOne({$and: [{name: this.nameGroup}, {[`event.subscribeUsers.${Meteor.userId()}`]: true}]});
+		if (!obj) {return;}
 
-		// console.log(obj.event);
 		function ress(num) {
 			switch(num) {
-				case 0: return 'Впорядкування';
-				case 1: return 'Замовити';
-				case 2: return 'Доставкa';
-				case 3: return 'Доставлено';
+				case 0: return 'ordering';
+				case 1: return 'ordered';
+				case 2: return 'delivering';
+				case 3: return 'delivered';
 				default: return ''
 			}
 		}
@@ -18,26 +19,31 @@ Template.eventsInGroup.helpers({
 		} else {
 			switch(obj.event.status) {
 				case 0: if(obj.event.subscribeUsers[Meteor.userId()] === true) {
-									return {
-										'status': ress(obj.event.status),
-										'nav': '<div class="btn-sm bg-success">wait for the response of all users</div>'};
+									_objRet.status = ress(obj.event.status);
+									_objRet.nav = '<div class="btn-sm bg-success">wait for the response of all users</div>';
+									_objRet.date = `${obj.event.dateAt.getDate()}-${obj.event.dateAt.getMonth()+1}-${obj.event.dateAt.getFullYear()}`;
+									return _objRet;
 								}
+								break;
 				case 1: if(obj.event.subscribeUsers[Meteor.userId()] === true) {
-									return {
-										'status': ress(obj.event.status),
-										'nav': '<button type="button" class="btn btn-primary btn-sm text-uppercase" name="show-menu">menu</button>'
-									};
+										_objRet.status = ress(obj.event.status);
+										_objRet.nav = '<button type="button" class="btn btn-primary btn-sm text-uppercase" name="show-menu">menu</button>';
+										_objRet.date = `${obj.event.dateAt.getDate()}-${obj.event.dateAt.getMonth()+1}-${obj.event.dateAt.getFullYear()}`;
+										return _objRet;
 								}
+								break;
 				case 2: case 3: if(obj.event.subscribeUsers[Meteor.userId()] === true) {
-									return {
-										'status': ress(obj.event.status),
-										'nav': '<button type="button" class="btn btn-primary btn-sm text-uppercase" name="cont-status">view orders</button>'
-								};
+										_objRet.status = ress(obj.event.status);
+										_objRet.nav = '<button type="button" class="btn btn-primary btn-sm text-uppercase" name="cont-status">view orders</button>';
+										_objRet.date = `${obj.event.dateAt.getDate()}-${obj.event.dateAt.getMonth()+1}-${obj.event.dateAt.getFullYear()}`;
+										return _objRet;
 								}
-
+								break;
 				default: return false
 			}
+
 		}
+
 	},
 	'viewEvent': function() {
 		var obj = Groups.findOne({
@@ -52,7 +58,7 @@ Template.eventsInGroup.helpers({
 													}]
 												}]});
 
-		if(obj.event === undefined) {
+		if(obj.event == undefined) {
 			return false;
 		} else {
 			if(obj.event.subscribeUsers[Meteor.userId()] === undefined) {
