@@ -10,8 +10,6 @@ Template.controlGroup.events({
 		Meteor.setTimeout(function() {
 				Meteor.call('_deleteGroup', Meteor.userId(), nameGroup);
 		}, 1000)
-
-
 	},
 
 });

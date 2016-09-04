@@ -1,18 +1,6 @@
 _usersGroup = new ReactiveDict();
 var _toggle = new ReactiveVar(false);
 
-// Template.addUsersToTheGroup.onCreated(function() {
-// 	var _this = this;
-// 	_usersGroup.get();
-// 	Meteor.call('_getUsersData', _this.data.nameGroup, true, function(err, res) {
-// 		console.log('res true', res);
-// 		_usersGroup.set('in', res);
-// 	});
-// 	Meteor.call('_getUsersData', _this.data.nameGroup, false, function(err, res) {
-// 		console.log('res false', res);
-// 		_usersGroup.set('out', res);
-// 	});
-// });
 
 Template.addUsersToTheGroup.helpers({
 	'usersEmailIsGroup': function() {

@@ -41,7 +41,6 @@ Template.eventsInGroup.helpers({
 								break;
 				default: return false
 			}
-
 		}
 
 	},

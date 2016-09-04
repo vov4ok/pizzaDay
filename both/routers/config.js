@@ -15,3 +15,4 @@ Router.onBeforeAction(function() {
 	}
 	this.next();
 });
+
